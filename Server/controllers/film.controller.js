@@ -71,3 +71,16 @@ export const addFilm = async (req, res) => {
       .json({ message: "Error adding film", error: error.message });
   }
 };
+export const getUserFilms = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const films = await Film.find({ createdBy: userId }).sort({
+      createdAt: -1,
+    });
+    res.status(200).json(films);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error fetching films", error: error.message });
+  }
+};

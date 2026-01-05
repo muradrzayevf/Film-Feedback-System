@@ -66,7 +66,7 @@ export default function Dashboard({ onBack }) {
                 )}
                 {film.runtime !== undefined && (
                   <span style={styles.badge}>
-                    <Timer size={14} /> {film.runtime} min
+                    <Timer size={14} /> {`${Math.floor(film.runtime / 60)}h ${film.runtime % 60}m`}
                   </span>
                 )}
                 {film.rating !== undefined && (

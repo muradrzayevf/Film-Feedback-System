@@ -44,9 +44,9 @@ export default function MainApp({ onLogout, onOpenDashboard }) {
               MyFilm
             </h1>
           </div>
-            <button onClick={onOpenDashboard} style={styles.logoutBtn}>
-                My Films
-            </button>
+          <button onClick={onOpenDashboard} style={styles.logoutBtn}>
+            My Films
+          </button>
 
           <button onClick={onLogout} className="logoutBtn" style={styles.logoutBtn}>
             <LogOut className="logoutIcon" style={styles.logoutIcon} />
@@ -104,7 +104,6 @@ export default function MainApp({ onLogout, onOpenDashboard }) {
                 </p>
                 <p>{film.rating ? `Rating: ${film.rating}` : "No rating"}</p>
                 <p>{film.overview ? `Overview: ${film.overview}` : "N/A"}</p>
-          
 
                 <button
                   onClick={() => handleAddFilm(film)}
@@ -129,6 +128,17 @@ export default function MainApp({ onLogout, onOpenDashboard }) {
         )}
       </main>
 
+      <footer style={styles.footer}>
+        © 2025 Murad Rzayev.{" "}
+        <a 
+          href="https://github.com/muradrzayevf/Film-Feedback-System"
+          style={styles.footerLink}
+          target="_blank"
+        >
+          This site is open-source
+        </a>
+      </footer>
+
       {showAddModal && (
         <AddFilmModal
           film={selectedFilm}
@@ -151,8 +161,10 @@ export default function MainApp({ onLogout, onOpenDashboard }) {
 const styles = {
   appRoot: {
     minHeight: "100vh",
-    background: "#0b1220", // solid dark
+    background: "#0b1220",
     color: "#e5e7eb",
+    display: "flex",
+    flexDirection: "column",
   },
 
   header: {
@@ -197,7 +209,6 @@ const styles = {
     color: "#f1f5f9",
   },
 
-  // LOGOUT
   logoutBtn: {
     display: "inline-flex",
     alignItems: "center",
@@ -220,7 +231,9 @@ const styles = {
   logoutIcon: { width: 16, height: 16 },
 
   main: {
+    flex: 1,
     maxWidth: 1100,
+    width: "100%",
     margin: "0 auto",
     padding: "26px 16px 40px",
   },
@@ -272,7 +285,6 @@ const styles = {
     background: "rgba(2,6,23,.75)",
   },
 
-  // SEARCH BUTTON (no gradient)
   searchBtn: {
     flex: "0 0 auto",
     padding: "14px 18px",
@@ -338,7 +350,6 @@ const styles = {
     fontSize: 13,
   },
 
-  // ADD BUTTON (no gradient)
   addBtn: {
     marginTop: 14,
     width: "100%",
@@ -378,4 +389,20 @@ const styles = {
   },
 
   emptyText: { margin: 0, fontSize: 16 },
+
+  footer: {
+    textAlign: "center",
+    padding: "24px 16px",
+    borderTop: "1px solid rgba(148,163,184,.16)",
+    background: "rgba(2,6,23,.45)",
+    color: "rgba(148,163,184,.85)",
+    fontSize: 14,
+    marginTop: "auto",
+  },
+
+  footerLink: {
+    color: "#93c5fd",
+    textDecoration: "none",
+    transition: "color .15s ease",
+  }
 };

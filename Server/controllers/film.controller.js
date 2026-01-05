@@ -64,15 +64,13 @@ export const addFilm = async (req, res) => {
     if (media_type === "movie") {
       runtime = filmData.runtime || 0;
     } else if (media_type === "tv") {
-      runtime =
-        filmData.episode_run_time && filmData.episode_run_time.length > 0
-          ? filmData.episode_run_time[0]
-          : 0;
       const epp = filmData.number_of_episodes || 1;
+      runtime = 50;
+
       runtime = runtime * epp;
     }
     const newFilm = await Film.create({
-      title: filmData.title,
+      title: filmData.title || filmData.name,
       tmdbID: filmData.id,
 
       rating,

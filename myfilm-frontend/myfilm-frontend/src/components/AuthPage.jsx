@@ -1,109 +1,191 @@
-import React, { useState } from 'react';
-import { Film } from 'lucide-react';
-import { api } from '../services/api';
+import React, { useState } from "react";
+import { api } from "../services/api";
 
-export default function AuthPage({ onAuth }) {
-  const [mode, setMode] = useState('login');
-  const [form, setForm] = useState({ username: '', email: '', password: '' });
-  const [error, setError] = useState('');
+export default function AuthPage({ onAuthed }) {
+  const [mode, setMode] = useState("login"); // login | register
+  const [form, setForm] = useState({ username: "", email: "", password: "" });
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async () => {
-    if (!form.username || !form.password) {
-      setError('Please fill in all required fields');
-      return;
-    }
-    if (mode === 'register' && !form.email) {
-      setError('Email is required for registration');
-      return;
-    }
+  function handleChange(e) {
+    setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
+  }
 
-    setError('');
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setError("");
     setLoading(true);
 
     try {
-      if (mode === 'login') {
+      if (mode === "login") {
         await api.auth.login({ username: form.username, password: form.password });
       } else {
         await api.auth.register(form);
       }
-      onAuth();
+      
+      
     } catch (err) {
-      setError(err.message);
+      setError(err.message || "Auth error");
     } finally {
       setLoading(false);
     }
-  };
+  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl p-8 border border-white/20">
-        <div className="text-center mb-8">
-          <Film className="w-16 h-16 mx-auto text-purple-400 mb-4" />
-          <h1 className="text-4xl font-bold text-white mb-2">MyFilm</h1>
-          <p className="text-purple-200">Track your favorite movies</p>
-        </div>
+    <div style={ui.container}>
+      <div style={ui.card}>
+        <h1 style={ui.h1}>MyFilm</h1>
+        <p style={ui.sub}>{mode === "login" ? "Login" : "Register"}</p>
 
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-purple-200 mb-2">Username</label>
-            <input
-              type="text"
-              value={form.username}
-              onChange={(e) => setForm({ ...form, username: e.target.value })}
-              onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
-              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
-            />
-          </div>
+        <form onSubmit={handleSubmit} style={ui.form}>
+          <label style={ui.label}>Username</label>
+          <input
+            style={ui.input}
+            name="username"
+            value={form.username}
+            onChange={handleChange}
+            required
+          />
 
-          {mode === 'register' && (
-            <div>
-              <label className="block text-sm font-medium text-purple-200 mb-2">Email</label>
+          {mode === "register" && (
+            <>
+              <label style={ui.label}>Email</label>
               <input
+                style={ui.input}
+                name="email"
                 type="email"
                 value={form.email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
-                onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
-                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                onChange={handleChange}
+                required
               />
-            </div>
+            </>
           )}
 
-          <div>
-            <label className="block text-sm font-medium text-purple-200 mb-2">Password</label>
-            <input
-              type="password"
-              value={form.password}
-              onChange={(e) => setForm({ ...form, password: e.target.value })}
-              onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
-              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
-            />
-          </div>
+          <label style={ui.label}>Password</label>
+          <input
+            style={ui.input}
+            name="password"
+            type="password"
+            value={form.password}
+            onChange={handleChange}
+            required
+            minLength={6}
+          />
 
-          {error && (
-            <div className="bg-red-500/20 border border-red-500/50 text-red-200 px-4 py-3 rounded-lg text-sm">
-              {error}
-            </div>
-          )}
+          {error && <div style={ui.error}>{error}</div>}
 
-          <button
-            onClick={handleSubmit}
-            disabled={loading}
-            className="w-full bg-purple-600 hover:bg-purple-700 disabled:bg-purple-800 text-white font-semibold py-3 rounded-lg transition-colors"
-          >
-            {loading ? 'Please wait...' : mode === 'login' ? 'Login' : 'Register'}
+          <button style={ui.btn} disabled={loading}>
+            {loading ? "Please wait..." : mode === "login" ? "Login" : "Register"}
           </button>
-        </div>
+        </form>
 
-        <div className="mt-6 text-center">
-          <button
-            onClick={() => setMode(mode === 'login' ? 'register' : 'login')}
-            className="text-purple-300 hover:text-purple-200 text-sm transition-colors"
-          >
-            {mode === 'login' ? "Don't have an account? Register" : 'Already have an account? Login'}
-          </button>
-        </div>
+        <button
+          type="button"
+          style={ui.linkBtn}
+          onClick={() => setMode((m) => (m === "login" ? "register" : "login"))}
+        >
+          {mode === "login" ? "No account? Register" : "Have account? Login"}
+        </button>
       </div>
     </div>
   );
 }
+
+const ui = {
+  container: {
+    minHeight: "100vh",
+    display: "grid",
+    placeItems: "center",
+    padding: 16,
+    background: "#0f172a",
+  },
+
+  card: {
+    width: "100%",
+    maxWidth: 420,
+    background: "#111827",
+    border: "1px solid #1f2937",
+    borderRadius: 14,
+    padding: 20,
+    color: "#e5e7eb",
+    boxShadow: "0 10px 30px rgba(0,0,0,.35)",
+  },
+
+  h1: {
+    margin: 0,
+    fontSize: 24,
+    fontWeight: 700,
+    letterSpacing: "-0.3px",
+  },
+
+  sub: {
+    margin: "6px 0 18px",
+    fontSize: 14,
+    color: "#9ca3af",
+  },
+
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 12,
+  },
+
+  label: {
+    fontSize: 13,
+    color: "#cbd5f5",
+  },
+
+  input: {
+    padding: "10px 12px",
+    borderRadius: 10,
+    border: "1px solid #334155",
+    background: "#020617",
+    color: "#e5e7eb",
+    fontSize: 14,
+    outline: "none",
+    transition: "border-color 0.2s ease, box-shadow 0.2s ease",
+  },
+
+  inputFocus: {
+    borderColor: "#60a5fa",
+    boxShadow: "0 0 0 2px rgba(96,165,250,.25)",
+  },
+
+  btn: {
+    marginTop: 10,
+    padding: "10px 12px",
+    borderRadius: 10,
+    border: "1px solid #334155",
+    background: "#1f2937",
+    color: "#f9fafb",
+    fontWeight: 600,
+    cursor: "pointer",
+    transition: "all 0.2s ease",
+  },
+
+  btnHover: {
+    background: "#334155",
+    borderColor: "#475569",
+  },
+
+  btnActive: {
+    background: "#020617",
+    transform: "scale(0.98)",
+  },
+
+  linkBtn: {
+    marginTop: 14,
+    width: "100%",
+    background: "transparent",
+    border: 0,
+    color: "#93c5fd",
+    cursor: "pointer",
+    fontSize: 14,
+    textDecoration: "underline",
+    transition: "color 0.2s ease",
+  },
+
+  linkBtnHover: {
+    color: "#bfdbfe",
+  },
+};

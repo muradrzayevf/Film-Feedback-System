@@ -102,6 +102,9 @@ export default function MainApp({ onLogout, onOpenDashboard }) {
                 <p className="cardSub" style={styles.cardSub}>
                   {film.release_date ? new Date(film.release_date).getFullYear() : "N/A"}
                 </p>
+                <p>{film.rating ? `Rating: ${film.rating}` : "No rating"}</p>
+                <p>{film.overview ? `Overview: ${film.overview}` : "N/A"}</p>
+          
 
                 <button
                   onClick={() => handleAddFilm(film)}
@@ -148,18 +151,17 @@ export default function MainApp({ onLogout, onOpenDashboard }) {
 const styles = {
   appRoot: {
     minHeight: "100vh",
-    background:
-      "radial-gradient(1200px 600px at 20% 20%, rgba(168,85,247,.25), rgba(15,23,42,0) 60%), radial-gradient(900px 500px at 80% 30%, rgba(99,102,241,.22), rgba(15,23,42,0) 55%), linear-gradient(135deg, #0b1020, #1b0f2d 45%, #0b1020)",
-    color: "#fff",
+    background: "#0b1220", // solid dark
+    color: "#e5e7eb",
   },
 
   header: {
     position: "sticky",
     top: 0,
     zIndex: 20,
-    background: "rgba(0,0,0,.28)",
-    backdropFilter: "blur(12px)",
-    borderBottom: "1px solid rgba(255,255,255,.10)",
+    background: "rgba(11,18,32,.85)",
+    backdropFilter: "blur(10px)",
+    borderBottom: "1px solid rgba(148,163,184,.16)",
   },
 
   headerInner: {
@@ -180,35 +182,41 @@ const styles = {
   },
 
   brandIcon: {
-    width: 32,
-    height: 32,
-    color: "rgba(192,132,252,.95)",
+    width: 30,
+    height: 30,
+    color: "#93c5fd",
     flex: "0 0 auto",
   },
 
   brandTitle: {
     margin: 0,
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: 800,
     letterSpacing: ".2px",
     whiteSpace: "nowrap",
+    color: "#f1f5f9",
   },
 
+  // LOGOUT
   logoutBtn: {
     display: "inline-flex",
     alignItems: "center",
     justifyContent: "center",
     gap: 8,
     padding: "10px 12px",
-    borderRadius: 12,
-    border: "1px solid rgba(239,68,68,.35)",
-    background: "rgba(239,68,68,.12)",
-    color: "rgba(254,202,202,.95)",
+    borderRadius: 10,
+    border: "1px solid rgba(148,163,184,.22)",
+    background: "rgba(2,6,23,.35)",
+    color: "#e5e7eb",
     cursor: "pointer",
     userSelect: "none",
-    transition: "transform .06s ease, background .15s ease, border-color .15s ease",
+    transition: "transform .08s ease, background .15s ease, border-color .15s ease",
   },
-
+  logoutBtnHover: {
+    background: "rgba(2,6,23,.55)",
+    borderColor: "rgba(148,163,184,.32)",
+  },
+  logoutBtnActive: { transform: "scale(0.98)" },
   logoutIcon: { width: 16, height: 16 },
 
   main: {
@@ -239,48 +247,62 @@ const styles = {
     transform: "translateY(-50%)",
     width: 20,
     height: 20,
-    color: "rgba(216,180,254,.85)",
+    color: "rgba(148,163,184,.9)",
     pointerEvents: "none",
   },
 
   searchInput: {
     width: "100%",
     padding: "14px 14px 14px 44px",
-    borderRadius: 14,
-    border: "1px solid rgba(255,255,255,.18)",
-    background: "rgba(255,255,255,.10)",
-    color: "#fff",
+    borderRadius: 12,
+    border: "1px solid rgba(148,163,184,.18)",
+    background: "rgba(2,6,23,.55)",
+    color: "#e5e7eb",
     outline: "none",
     fontSize: 15,
-    boxShadow: "0 10px 24px rgba(0,0,0,.18)",
+    transition: "border-color .15s ease, box-shadow .15s ease, background .15s ease",
+  },
+  searchInputHover: {
+    borderColor: "rgba(148,163,184,.30)",
+    background: "rgba(2,6,23,.70)",
+  },
+  searchInputFocus: {
+    borderColor: "#60a5fa",
+    boxShadow: "0 0 0 2px rgba(96,165,250,.25)",
+    background: "rgba(2,6,23,.75)",
   },
 
+  // SEARCH BUTTON (no gradient)
   searchBtn: {
     flex: "0 0 auto",
     padding: "14px 18px",
-    borderRadius: 14,
-    border: "1px solid rgba(168,85,247,.35)",
-    background: "linear-gradient(135deg, rgba(168,85,247,.95), rgba(99,102,241,.85))",
-    color: "#fff",
+    borderRadius: 12,
+    border: "1px solid rgba(148,163,184,.22)",
+    background: "#111827",
+    color: "#f8fafc",
     fontWeight: 800,
     cursor: "pointer",
-    transition: "transform .06s ease, filter .15s ease",
+    transition: "transform .08s ease, background .15s ease, border-color .15s ease",
     minWidth: 140,
   },
-
+  searchBtnHover: {
+    background: "#0b1220",
+    borderColor: "rgba(148,163,184,.35)",
+  },
+  searchBtnActive: { transform: "scale(0.98)" },
   searchBtnDisabled: {
-    opacity: 0.65,
+    opacity: 0.55,
     cursor: "not-allowed",
-    filter: "saturate(.7)",
   },
 
   errorBox: {
     marginTop: 12,
     padding: "10px 12px",
     borderRadius: 12,
-    border: "1px solid rgba(239,68,68,.45)",
-    background: "rgba(239,68,68,.14)",
-    color: "rgba(254,202,202,.95)",
+    border: "1px solid rgba(239,68,68,.35)",
+    background: "rgba(239,68,68,.12)",
+    color: "#fecaca",
+    fontSize: 13,
   },
 
   grid: {
@@ -290,19 +312,33 @@ const styles = {
   },
 
   card: {
-    borderRadius: 16,
-    border: "1px solid rgba(255,255,255,.16)",
-    background: "rgba(255,255,255,.10)",
-    backdropFilter: "blur(10px)",
+    borderRadius: 14,
+    border: "1px solid rgba(148,163,184,.16)",
+    background: "rgba(2,6,23,.45)",
     padding: 16,
-    boxShadow: "0 18px 36px rgba(0,0,0,.22)",
-    transition: "transform .10s ease, background .15s ease",
+    boxShadow: "0 10px 22px rgba(0,0,0,.25)",
+    transition: "transform .10s ease, border-color .15s ease, background .15s ease",
+  },
+  cardHover: {
+    transform: "translateY(-2px)",
+    borderColor: "rgba(148,163,184,.28)",
+    background: "rgba(2,6,23,.60)",
   },
 
-  cardTitle: { margin: "0 0 6px", fontSize: 18, fontWeight: 900 },
+  cardTitle: {
+    margin: "0 0 6px",
+    fontSize: 18,
+    fontWeight: 800,
+    color: "#f1f5f9",
+  },
 
-  cardSub: { margin: 0, color: "rgba(216,180,254,.9)", fontSize: 13 },
+  cardSub: {
+    margin: 0,
+    color: "rgba(148,163,184,.95)",
+    fontSize: 13,
+  },
 
+  // ADD BUTTON (no gradient)
   addBtn: {
     marginTop: 14,
     width: "100%",
@@ -311,21 +347,26 @@ const styles = {
     justifyContent: "center",
     gap: 8,
     padding: "10px 12px",
-    borderRadius: 12,
-    border: "1px solid rgba(168,85,247,.35)",
-    background: "rgba(168,85,247,.22)",
-    color: "#fff",
+    borderRadius: 10,
+    border: "1px solid rgba(148,163,184,.22)",
+    background: "#111827",
+    color: "#f8fafc",
     cursor: "pointer",
-    transition: "transform .06s ease, background .15s ease",
+    transition: "transform .08s ease, background .15s ease, border-color .15s ease",
     fontWeight: 800,
   },
+  addBtnHover: {
+    background: "#0b1220",
+    borderColor: "rgba(148,163,184,.35)",
+  },
+  addBtnActive: { transform: "scale(0.98)" },
 
   addIcon: { width: 16, height: 16 },
 
   empty: {
     textAlign: "center",
     padding: "70px 10px",
-    color: "rgba(216,180,254,.92)",
+    color: "rgba(148,163,184,.95)",
   },
 
   emptyIcon: {
@@ -333,12 +374,8 @@ const styles = {
     height: 84,
     margin: "0 auto 10px",
     display: "block",
-    color: "rgba(192,132,252,.42)",
+    color: "rgba(148,163,184,.35)",
   },
 
   emptyText: { margin: 0, fontSize: 16 },
-  
-
-  // responsive via JS: apply on window width with CSS media normally,
-  // but keeping it simple (no logic change): use CSS grid change below in CSS suggestion.
 };

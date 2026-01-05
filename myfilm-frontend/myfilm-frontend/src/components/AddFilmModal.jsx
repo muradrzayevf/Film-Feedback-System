@@ -19,7 +19,9 @@ export default function AddFilmModal({ film, onClose, onSuccess }) {
     try {
       await api.films.add({
         tmdbID: film.tmdbID,
+        media_type: film.media_type,
         rating: form.rating ? parseFloat(form.rating) : undefined,
+
         notes: form.notes,
         watched: form.watched,
         watchedAt: form.watchedAt || undefined,
@@ -128,7 +130,6 @@ export default function AddFilmModal({ film, onClose, onSuccess }) {
     </div>
   );
 }
-
 const styles = {
   overlay: {
     position: "fixed",
@@ -138,7 +139,7 @@ const styles = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    background: "rgba(0,0,0,.70)",
+    background: "rgba(2,6,23,.75)",
     backdropFilter: "blur(6px)",
   },
 
@@ -147,10 +148,9 @@ const styles = {
     maxWidth: 520,
     maxHeight: "90vh",
     overflowY: "auto",
-    borderRadius: 18,
-    border: "1px solid rgba(255,255,255,.16)",
-    background:
-      "radial-gradient(900px 420px at 20% 20%, rgba(168,85,247,.22), rgba(15,23,42,0) 55%), rgba(7,12,24,.92)",
+    borderRadius: 16,
+    border: "1px solid rgba(148,163,184,.18)",
+    background: "#0b1220",
     boxShadow: "0 30px 70px rgba(0,0,0,.45)",
   },
 
@@ -164,22 +164,22 @@ const styles = {
     justifyContent: "space-between",
     gap: 12,
     padding: "4px 4px 14px",
-    borderBottom: "1px solid rgba(255,255,255,.10)",
+    borderBottom: "1px solid rgba(148,163,184,.16)",
     marginBottom: 14,
   },
 
   title: {
     margin: 0,
-    fontSize: 22,
-    fontWeight: 900,
+    fontSize: 20,
+    fontWeight: 800,
     letterSpacing: ".2px",
-    color: "#fff",
+    color: "#f1f5f9",
   },
 
   subtitle: {
     margin: "6px 0 0",
     fontSize: 13,
-    color: "rgba(216,180,254,.9)",
+    color: "#94a3b8",
   },
 
   stack: {
@@ -188,26 +188,34 @@ const styles = {
     gap: 14,
   },
 
+  // CHECKBOX
   checkLabel: {
     display: "flex",
     alignItems: "center",
     gap: 10,
     cursor: "pointer",
-    color: "rgba(216,180,254,.95)",
+    color: "#e5e7eb",
     userSelect: "none",
-    padding: "10px 10px",
-    borderRadius: 12,
-    border: "1px solid rgba(255,255,255,.12)",
-    background: "rgba(255,255,255,.06)",
+    padding: "10px 12px",
+    borderRadius: 10,
+    border: "1px solid rgba(148,163,184,.18)",
+    background: "rgba(2,6,23,.55)",
+    transition: "background .15s ease, border-color .15s ease",
+  },
+
+  checkLabelHover: {
+    background: "rgba(2,6,23,.75)",
+    borderColor: "rgba(148,163,184,.30)",
   },
 
   checkbox: {
     width: 18,
     height: 18,
-    accentColor: "#a855f7",
+    accentColor: "#60a5fa",
     cursor: "pointer",
   },
 
+  // LABELS
   fieldLabel: {
     display: "flex",
     alignItems: "center",
@@ -215,7 +223,7 @@ const styles = {
     marginBottom: 8,
     fontSize: 13,
     fontWeight: 700,
-    color: "rgba(216,180,254,.95)",
+    color: "#cbd5f5",
   },
 
   fieldLabelPlain: {
@@ -223,30 +231,50 @@ const styles = {
     marginBottom: 8,
     fontSize: 13,
     fontWeight: 700,
-    color: "rgba(216,180,254,.95)",
+    color: "#cbd5f5",
   },
 
+  // INPUT
   input: {
     width: "100%",
     padding: "12px 12px",
-    borderRadius: 12,
-    border: "1px solid rgba(255,255,255,.16)",
-    background: "rgba(255,255,255,.08)",
-    color: "#fff",
+    borderRadius: 10,
+    border: "1px solid rgba(148,163,184,.18)",
+    background: "rgba(2,6,23,.55)",
+    color: "#e5e7eb",
     outline: "none",
     fontSize: 14,
+    transition: "border-color .15s ease, box-shadow .15s ease, background .15s ease",
+  },
+
+  inputHover: {
+    background: "rgba(2,6,23,.70)",
+    borderColor: "rgba(148,163,184,.30)",
+  },
+
+  inputFocus: {
+    background: "rgba(2,6,23,.75)",
+    borderColor: "#60a5fa",
+    boxShadow: "0 0 0 2px rgba(96,165,250,.25)",
   },
 
   textarea: {
     width: "100%",
     padding: "12px 12px",
-    borderRadius: 12,
-    border: "1px solid rgba(255,255,255,.16)",
-    background: "rgba(255,255,255,.08)",
-    color: "#fff",
+    borderRadius: 10,
+    border: "1px solid rgba(148,163,184,.18)",
+    background: "rgba(2,6,23,.55)",
+    color: "#e5e7eb",
     outline: "none",
     fontSize: 14,
     resize: "none",
+    transition: "border-color .15s ease, box-shadow .15s ease, background .15s ease",
+  },
+
+  textareaFocus: {
+    background: "rgba(2,6,23,.75)",
+    borderColor: "#60a5fa",
+    boxShadow: "0 0 0 2px rgba(96,165,250,.25)",
   },
 
   actions: {
@@ -255,47 +283,63 @@ const styles = {
     marginTop: 6,
   },
 
+  // BUTTONS
   btnSecondary: {
     flex: 1,
     padding: "12px 12px",
-    borderRadius: 12,
-    border: "1px solid rgba(255,255,255,.16)",
-    background: "rgba(255,255,255,.08)",
-    color: "#fff",
+    borderRadius: 10,
+    border: "1px solid rgba(148,163,184,.22)",
+    background: "#111827",
+    color: "#f8fafc",
     cursor: "pointer",
-    fontWeight: 800,
+    fontWeight: 700,
+    transition: "background .15s ease, border-color .15s ease, transform .08s ease",
+  },
+
+  btnSecondaryHover: {
+    background: "#0b1220",
+    borderColor: "rgba(148,163,184,.35)",
   },
 
   btnPrimary: {
     flex: 1,
     padding: "12px 12px",
-    borderRadius: 12,
-    border: "1px solid rgba(168,85,247,.35)",
-    background: "linear-gradient(135deg, rgba(168,85,247,.95), rgba(99,102,241,.85))",
-    color: "#fff",
+    borderRadius: 10,
+    border: "1px solid rgba(148,163,184,.22)",
+    background: "#1f2937",
+    color: "#f9fafb",
     cursor: "pointer",
-    fontWeight: 900,
+    fontWeight: 800,
+    transition: "background .15s ease, border-color .15s ease, transform .08s ease",
+  },
+
+  btnPrimaryHover: {
+    background: "#0b1220",
+    borderColor: "rgba(148,163,184,.35)",
+  },
+
+  btnPrimaryActive: {
+    transform: "scale(0.98)",
   },
 
   btnPrimaryDisabled: {
-    opacity: 0.65,
+    opacity: 0.55,
     cursor: "not-allowed",
-    filter: "saturate(.7)",
   },
 
   errorBox: {
     padding: "10px 12px",
-    borderRadius: 12,
-    border: "1px solid rgba(239,68,68,.45)",
-    background: "rgba(239,68,68,.14)",
-    color: "rgba(254,202,202,.95)",
+    borderRadius: 10,
+    border: "1px solid rgba(239,68,68,.35)",
+    background: "rgba(239,68,68,.12)",
+    color: "#fecaca",
     fontSize: 13,
   },
 
   hint: {
     marginTop: 4,
     fontSize: 12,
-    color: "rgba(255,255,255,.55)",
+    color: "#94a3b8",
   },
 
   icon16: { width: 16, height: 16 },

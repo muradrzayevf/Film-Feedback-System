@@ -11,6 +11,8 @@ const FilmSchema = new mongoose.Schema(
 
     watched: { type: Boolean, default: false },
     watchedAt: { type: Date },
+    runtime: { type: Number },
+    media_type: { type: String, enum: ["movie", "tv"], required: true },
 
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,

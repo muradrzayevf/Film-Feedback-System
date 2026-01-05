@@ -13,7 +13,7 @@ export const searchFilmsTMDB = async (req, res) => {
     });
   }
   const TMDB_API_KEY = process.env.TMDB_API_KEY;
-  const tmdbUrl = `https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(
+  const tmdbUrl = `https://api.themoviedb.org/3/search/multi?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(
     q
   )}`;
   if (!TMDB_API_KEY) {
@@ -27,14 +27,17 @@ export const searchFilmsTMDB = async (req, res) => {
 
   const results = (data.results || []).slice(0, 15).map((film) => ({
     tmdbID: film.id,
-    title: film.title,
-    release_date: film.release_date,
+    title: film.title || film.name,
+    media_type: film.media_type,
+    release_date: film.release_date || film.first_air_date,
+    rating: film.vote_average,
+    overview: film.overview,
   }));
   return res.status(200).json(results);
 };
 export const addFilm = async (req, res) => {
   try {
-    const { tmdbID, rating, notes, watchedAt, watched } = req.body;
+    const { tmdbID, media_type, rating, notes, watchedAt, watched } = req.body;
     const createdby = req.user.id;
     const existingFilm = await Film.findOne({ tmdbID, createdby });
     if (existingFilm) {
@@ -48,20 +51,36 @@ export const addFilm = async (req, res) => {
         .status(500)
         .json({ message: "TMDB API key is not configured." });
     }
-    const url = `https://api.themoviedb.org/3/movie/${tmdbID}?api_key=${TMDB_API_KEY}`;
+    const url =
+      media_type === "tv"
+        ? `https://api.themoviedb.org/3/tv/${tmdbID}?api_key=${TMDB_API_KEY}`
+        : `https://api.themoviedb.org/3/movie/${tmdbID}?api_key=${TMDB_API_KEY}`;
     const response = await fetch(url);
     if (!response.ok) {
       return res.status(400).json({ message: "Invalid TMDB ID." });
     }
     const filmData = await response.json();
-
+    let runtime = 0;
+    if (media_type === "movie") {
+      runtime = filmData.runtime || 0;
+    } else if (media_type === "tv") {
+      runtime =
+        filmData.episode_run_time && filmData.episode_run_time.length > 0
+          ? filmData.episode_run_time[0]
+          : 0;
+      const epp = filmData.number_of_episodes || 1;
+      runtime = runtime * epp;
+    }
     const newFilm = await Film.create({
       title: filmData.title,
       tmdbID: filmData.id,
+
       rating,
       notes,
       watched,
       watchedAt,
+      runtime: runtime,
+      media_type: media_type,
       createdBy: req.user.id,
     });
     res.status(201).json({ message: "Film added successfully", film: newFilm });
